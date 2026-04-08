@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")  // Permite peticiones desde Netlify (solo para demo)
+@CrossOrigin(origins = "*")  // Permite peticiones desde cualquier origen (para desarrollo)
 public class AuthController {
     
     @Autowired
@@ -32,7 +32,7 @@ public class AuthController {
         WaitingList newUser = new WaitingList(
             request.getEmail(),
             request.getUsername(),
-            request.getPassword()  // Por ahora en texto plano (solo demo)
+            request.getPassword()
         );
         
         // 3. Guardar en la base de datos
@@ -44,7 +44,6 @@ public class AuthController {
             .body(new RegisterResponse(true, "¡Registro exitoso! Te avisaremos cuando lancemos Fukurou."));
     }
     
-    // Endpoint de prueba para verificar que el backend funciona
     @GetMapping("/ping")
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("Fukurou backend is running!");
