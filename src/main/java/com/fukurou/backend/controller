@@ -1,0 +1,52 @@
+package com.fukurou.backend.controller;
+
+import com.fukurou.backend.dto.RegisterRequest;
+import com.fukurou.backend.dto.RegisterResponse;
+import com.fukurou.backend.entity.WaitingList;
+import com.fukurou.backend.repository.WaitingListRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")  // Permite peticiones desde Netlify (solo para demo)
+public class AuthController {
+    
+    @Autowired
+    private WaitingListRepository waitingListRepository;
+    
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        
+        // 1. Verificar si el email ya está registrado
+        if (waitingListRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity
+                .badRequest()
+                .body(new RegisterResponse(false, "Este email ya está registrado en la lista de espera"));
+        }
+        
+        // 2. Crear el registro
+        WaitingList newUser = new WaitingList(
+            request.getEmail(),
+            request.getUsername(),
+            request.getPassword()  // Por ahora en texto plano (solo demo)
+        );
+        
+        // 3. Guardar en la base de datos
+        waitingListRepository.save(newUser);
+        
+        // 4. Responder éxito
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new RegisterResponse(true, "¡Registro exitoso! Te avisaremos cuando lancemos Fukurou."));
+    }
+    
+    // Endpoint de prueba para verificar que el backend funciona
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("Fukurou backend is running!");
+    }
+}

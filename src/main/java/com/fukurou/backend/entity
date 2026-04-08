@@ -1,0 +1,63 @@
+package com.fukurou.backend.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "waiting_list")
+public class WaitingList {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false, unique = true, length = 150)
+    private String email;
+    
+    @Column(nullable = false, length = 100)
+    private String username;
+
+     @Column(nullable = false)
+    private String password;  // Almacenaremos en texto plano SOLO PARA DEMO
+    
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
+    
+    @Column(name = "source", length = 50)
+    private String source = "web_form";
+    
+    @Column(name = "notified")
+    private boolean notified = false;
+
+      public WaitingList() {}
+    
+    // Constructor con parámetros
+    public WaitingList(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.registeredAt = LocalDateTime.now();
+    }
+    
+    // Getters y Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    
+    public LocalDateTime getRegisteredAt() { return registeredAt; }
+    public void setRegisteredAt(LocalDateTime registeredAt) { this.registeredAt = registeredAt; }
+    
+    public String getSource() { return source; }
+    public void setSource(String source) { this.source = source; }
+    
+    public boolean isNotified() { return notified; }
+    public void setNotified(boolean notified) { this.notified = notified; }
+}

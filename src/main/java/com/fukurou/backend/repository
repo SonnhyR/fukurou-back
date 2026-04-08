@@ -1,0 +1,16 @@
+package com.fukurou.backend.repository;
+
+import com.fukurou.backend.entity.WaitingList;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
+
+@Repository
+public interface WaitingListRepository extends JpaRepository<WaitingList, Long> {
+    
+    // Buscar por email (para evitar duplicados)
+    Optional<WaitingList> findByEmail(String email);
+    
+    // Verificar si ya existe un email
+    boolean existsByEmail(String email);
+}
